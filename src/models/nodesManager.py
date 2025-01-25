@@ -1,5 +1,3 @@
-import threading
-
 from src.models import Node
 
 class NodesManager:
@@ -14,9 +12,5 @@ class NodesManager:
 
     
     def lauch_algorithm(self, k: int, alpha: int, beta: int):
-        threads = [threading.Thread(target=node.snowflakeLoop, args=(self, k, alpha, beta)) for node in self.nodes]
-        for thread in threads:
-            thread.start()
-
-        for thread in threads:
-            thread.join()
+        for node in self.nodes:
+            node.snowflakeLoop(self, k, alpha, beta)

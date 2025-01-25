@@ -56,7 +56,7 @@ class Node:
         return counter
     
     
-    def snowflakeLoop(self, nodesManager: 'NodesManager', k: int, alpha: int, beta: int, iter_max: int = 10):
+    def snowflakeLoop(self, nodesManager: 'NodesManager', k: int, alpha: int, beta: int, iter_max: int = 50):
         # Initialisation
         color = random.choice(list(Colors))
         cpt = 0
@@ -65,6 +65,12 @@ class Node:
 
         # Déroulement de l'algorithme
         while (undecided):
+
+            iterations += 1
+            if iterations > iter_max:
+                #print(f"Le noeud {self} a atteint le nombre d'itération maximal {iter_max} ")
+                return
+
             if color == Colors.NULL:
                 continue
             K = self.sample(nodesManager, k)
@@ -82,14 +88,8 @@ class Node:
                             self.set_color(color)
                             undecided = False
 
-                        iterations += 1
-        
-            if iterations >= iter_max:
-                print(f"Le noeud {self} a atteint le nombre d'itération maximal {iter_max} ")
-                undecided = False
 
-
-    def snowballLoop(self, nodesManager: 'NodesManager', k: int, alpha: int, beta: int):
+    def snowballLoop(self, nodesManager: 'NodesManager', k: int, alpha: int, beta: int, iter_max: int = 50):
         # Initialisation
         color = random.choice(list(Colors))
         lastColor = random.choice(list(Colors))
@@ -100,9 +100,16 @@ class Node:
         }
 
         undecided = False
+        iterations = 0
 
         # Déroulement de l'algorithme
         while (undecided):
+
+            iterations += 1
+            if iterations > iter_max:
+                #print(f"Le noeud {self} a atteint le nombre d'itération maximal {iter_max} ")
+                return
+        
             if color == Colors.NULL:
                 continue
             K = self.sample(nodesManager, k)
@@ -123,3 +130,5 @@ class Node:
                         cpt += 1
                         if cpt > beta:
                             self.set_color(color)
+                            undecided = False
+
