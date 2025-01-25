@@ -1,5 +1,8 @@
 import random
+import tkinter as tk
+
 from src.models.nodesManager import NodesManager
+from src.views.nodesManagerView import NodesManagerView
 from src.enums.colors import Colors
 
 def afficher_distribution_couleurs(legend: str, nodes_manager: NodesManager):
@@ -32,3 +35,7 @@ afficher_distribution_couleurs("Au début", nodes_manager)
 
 
 afficher_distribution_couleurs("A la fin", nodes_manager)
+
+root = tk.Tk()
+nodes_manager_view = NodesManagerView(root, nodes_manager)
+root.mainloop()
