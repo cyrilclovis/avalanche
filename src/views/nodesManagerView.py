@@ -4,7 +4,6 @@ import random as rd
 
 from src.models.nodesManager import NodesManager
 from src.views.nodeView import NodeView
-from src.enums.colors import Colors
 
 
 class NodesManagerView(object):
@@ -14,6 +13,8 @@ class NodesManagerView(object):
 
     def __init__(self, racine, nodesManager: NodesManager):
         """Génère le terrain"""
+        self.nodesManager = nodesManager
+
         # Propriétés de la grille
         self.NODES_NUMBER = len(nodesManager.nodes)
         self.SIDE_NUMBER  = ceil(sqrt(self.NODES_NUMBER))
@@ -43,5 +44,5 @@ class NodesManagerView(object):
             for j in range(self.SIDE_NUMBER):
                 if cpt >= self.NODES_NUMBER:
                     return
-                NodeView(self.canvas, i*self.SIDE_SIZE, j*self.SIDE_SIZE, self.SIDE_SIZE, rd.choice(list(Colors)))
+                NodeView(self.nodesManager.nodes[cpt], self.canvas, i*self.SIDE_SIZE, j*self.SIDE_SIZE, self.SIDE_SIZE)
                 cpt += 1

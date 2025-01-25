@@ -8,9 +8,11 @@ class Node:
 
     def __init__(self):
         self.color = random.choice(list(Colors))
+        self.observers = []
 
     def set_color(self, color: Colors):
         self.color = color
+        self.notify_observers()
 
     def get_color(self) -> Colors:
         return self.color
@@ -22,7 +24,7 @@ class Node:
     def on_query(self, otherNode) -> Colors:
         """On renvoie la couleur du noeud actuelle"""
         if (self.color_is_null()):
-            self.color = otherNode.color
+            self.set_color(otherNode.color)
         return self.color
 
     def sample(self, nodesManger: 'NodesManager', k: int):
@@ -49,5 +51,14 @@ class Node:
         print(f"Couleurs obtenues après interrogation : {colors}")
         return colors
 
+    # *************** Observers
+    def add_observer(self, observer: 'NodeView'):
+        """Ajoute une vue à la liste des observateurs."""
+        self.observers.append(observer)
+
+    def notify_observers(self):
+        """Notifie toutes les vues de la mise à jour de la couleur."""
+        for observer in self.observers:
+            observer.update_color(self.color)
 
 
