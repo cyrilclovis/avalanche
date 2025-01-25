@@ -24,17 +24,19 @@ class NodesManagerView(object):
         # Initialisation de la vue
         self.racine = racine
         self.racine.title("Terrain de jeu")
-        self.creation_evolution_terrain()
-        
+        self.create_field()
 
-    def creation_evolution_terrain(self):
+        # Ajout du bouton
+        self.lauch_algo_btn()   
+
+    def create_field(self):
         """Crée le terrain de base puis y applique les règles"""
         self.canvas = tk.Canvas(self.racine, width=self.WIDTH, height=self.HEIGHT)
-        self.grille()
+        self.init_field()
         self.canvas.grid(column=0, row=0)
 
 
-    def grille(self):
+    def init_field(self):
         """La fonction crée la grille composé de carré bleus (eau)
         avec une probabilité p et marrons si cette proba n'est pas
         vérifiée.
@@ -46,3 +48,25 @@ class NodesManagerView(object):
                     return
                 NodeView(self.nodesManager.nodes[cpt], self.canvas, i*self.SIDE_SIZE, j*self.SIDE_SIZE, self.SIDE_SIZE)
                 cpt += 1
+
+
+    def lauch_algo_btn(self):
+        """Ajoute un bouton pour lancer l'algorithme"""
+        bouton_lancer = tk.Button(
+            self.racine,
+            text="Lancer l'algorithme",
+            command=self.lauch_algorithm
+        )
+        # Placer le bouton en dessous de la grille
+        bouton_lancer.grid(column=0, row=1, pady=10)
+
+
+    def lauch_algorithm(self):
+        """Appelle la méthode lauch_algorithm avec des paramètres prédéfinis"""
+        # Paramètres à ajuster selon vos besoins
+        k = 3   # Taille de l'échantillon
+        alpha = 0.8
+        beta = 3
+
+        print(f"Lancement de l'algorithme avec k={k}, alpha={alpha}, beta={beta}")
+        self.nodesManager.lauch_algorithm(k, alpha, beta)

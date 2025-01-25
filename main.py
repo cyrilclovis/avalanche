@@ -1,4 +1,3 @@
-import random
 import tkinter as tk
 
 from src.models.nodesManager import NodesManager
@@ -25,17 +24,15 @@ def afficher_distribution_couleurs(legend: str, nodes_manager: NodesManager):
 N = 600  # Nombre total de nœuds
 k = 3   # Taille de l'échantillon
 alpha = 0.8
-beta = 5  # Ajout d'un paramètre beta pour le seuil de stabilisation
+beta = 3  # Ajout d'un paramètre beta pour le seuil de stabilisation
 
 # Initialisation du gestionnaire de nœuds
 nodes_manager = NodesManager(N)
 
 afficher_distribution_couleurs("Au début", nodes_manager)
 
-
-
-afficher_distribution_couleurs("A la fin", nodes_manager)
-
 root = tk.Tk()
 nodes_manager_view = NodesManagerView(root, nodes_manager)
 root.mainloop()
+
+afficher_distribution_couleurs("A la fin", nodes_manager)

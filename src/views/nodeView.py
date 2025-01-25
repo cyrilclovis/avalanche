@@ -35,4 +35,4 @@ class NodeView:
         :param new_color: La nouvelle couleur du nœud.
         """
         self.color = new_color
-        self.canvas.itemconfig(self.node, fill=new_color, outline=new_color)
+        self.canvas.itemconfig(self.node, fill=new_color.value, outline=new_color.value)
