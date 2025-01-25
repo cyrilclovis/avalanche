@@ -1,5 +1,5 @@
 import random
-from src.nodeHandler.nodesManager import NodesManager
+from src.models.nodesManager import NodesManager
 from src.enums.colors import Colors
 
 def afficher_distribution_couleurs(legend: str, nodes_manager: NodesManager):

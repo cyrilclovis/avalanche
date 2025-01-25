@@ -2,7 +2,7 @@ import random
 from typing import List
 
 from src.enums.colors import Colors
-from src.nodeHandler import Node
+from src.models import Node
 
 class NodesManager:
     def __init__(self, NombreNoeuds: int):
