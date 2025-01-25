@@ -1,4 +1,3 @@
-import random
 from src.models.nodesManager import NodesManager
 from src.enums.colors import Colors
 
@@ -22,13 +21,13 @@ def afficher_distribution_couleurs(legend: str, nodes_manager: NodesManager):
 N = 600  # Nombre total de nœuds
 k = 3   # Taille de l'échantillon
 alpha = 0.8
-beta = 5  # Ajout d'un paramètre beta pour le seuil de stabilisation
+beta = 3  # Ajout d'un paramètre beta pour le seuil de stabilisation
 
 # Initialisation du gestionnaire de nœuds
 nodes_manager = NodesManager(N)
 
 afficher_distribution_couleurs("Au début", nodes_manager)
 
-
+nodes_manager.lauch_algorithm(k, alpha, beta)
 
 afficher_distribution_couleurs("A la fin", nodes_manager)
