@@ -1,7 +1,7 @@
 import tkinter as tk
 
 from src.models.nodesManager import NodesManager
-from src.views.nodesManagerView import NodesManagerView
+from src.views.form import Form
 from src.enums.colors import Colors
 
 def afficher_distribution_couleurs(legend: str, nodes_manager: NodesManager):
@@ -20,19 +20,7 @@ def afficher_distribution_couleurs(legend: str, nodes_manager: NodesManager):
     print(f"Bleu: {bleu_count}")
     print(f"Indéterminé : {none_count}")
 
-# Paramètres principaux
-N = 600  # Nombre total de nœuds
-k = 3   # Taille de l'échantillon
-alpha = 0.8
-beta = 3  # Ajout d'un paramètre beta pour le seuil de stabilisation
 
-# Initialisation du gestionnaire de nœuds
-nodes_manager = NodesManager(N)
-
-afficher_distribution_couleurs("Au début", nodes_manager)
-
-root = tk.Tk()
-nodes_manager_view = NodesManagerView(root, nodes_manager)
-root.mainloop()
-
-afficher_distribution_couleurs("A la fin", nodes_manager)
+racine = tk.Tk()
+Form(racine)
+racine.mainloop()
