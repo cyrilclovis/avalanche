@@ -33,8 +33,6 @@ class Node:
         """Notifie toutes les vues de la mise à jour de la couleur."""
         for observer in self.observers:
             observer.update_color(self.color)
-        undecided = False
-        iterations = 0
 
 
     # *************** Gestion des requetes
@@ -112,7 +110,7 @@ class Node:
                             undecided = False
 
 
-    def snowballLoop(self, nodesManager: 'NodesManager', k: int, alpha: int, beta: int, iter_max: int = 50):
+    def snowballLoop(self, nodesManager: 'NodesManager', k: int, alpha: float, beta: int, iter_max: int = 50):
         # Initialisation
         color = random.choice(list(Colors))
         lastColor = random.choice(list(Colors))
@@ -121,6 +119,8 @@ class Node:
             Colors.RED: 0,
             Colors.BLUE: 0,
         }
+        undecided = True
+        iterations = 0
 
         # Déroulement de l'algorithme
         while (undecided):
