@@ -61,15 +61,10 @@ class Form(object):
 
     def valider_parametres(self):
         """Récupère les valeurs saisies et les met à jour dans le gestionnaire."""
-        for cle, val in self.bouttons.items():
-            valeur = val.get()
-            # Convertit en float ou int selon la saisie
-            valeur_convertie = float(valeur) if '.' in valeur else int(valeur)
-            self.algo_manager.set(cle, valeur_convertie)
-        
-        self.nodes_manager_view.update(self.get_all_parameters())
+        userForm = [(key, val.get()) for key, val in self.bouttons.items()]
+        isValidForm, errors = self.algo_manager.set_parameters_if_correct_form(userForm)
+        if (isValidForm):
+            self.nodes_manager_view.update(self.algo_manager.get_all_parameters())
+        else:
+            print(errors)
 
-
-    def get_all_parameters(self):
-        """Renvoie les valeurs des paramètres après validation."""
-        return self.algo_manager.get_all_parameters()

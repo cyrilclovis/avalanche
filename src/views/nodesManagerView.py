@@ -48,11 +48,12 @@ class NodesManagerView(object):
 
 
     def update_model(self, params_tuple=None):
+        print(params_tuple)
         if params_tuple:
-            N, K, ALPHA, BETA = params_tuple
+            ALGO, N, K, ALPHA, BETA = params_tuple
         else:
-            N, K, ALPHA, BETA = AlgoParametersManager().get_all_parameters()
-        self.nodesManager = NodesManager(N, K, ALPHA, BETA)
+            ALGO, N, K, ALPHA, BETA = AlgoParametersManager().get_all_parameters()
+        self.nodesManager = NodesManager(ALGO, N, K, ALPHA, BETA)
 
 
     def update_view(self):
@@ -87,7 +88,7 @@ class NodesManagerView(object):
 
         def algorithm_thread():
             """Fonction exécutée dans un thread séparé permet de ne pas bloquer la GUI !"""
-            self.nodesManager.lauch_algorithm()
+            self.nodesManager.launch_algorithm()
 
         # Création et démarrage du thread
         thread = threading.Thread(target=algorithm_thread)
