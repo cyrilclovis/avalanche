@@ -11,6 +11,14 @@ class Node:
         self.color = random.choice([Colors.BLUE, Colors.RED, Colors.NULL]) if not self.is_bizantin else Colors.PURPLE
         self.color_observers = []
         self.color_history = [self.color]
+        ##### Attributs pour le déroulement des algorithmes
+        # --- Pour snowflake
+        self.cpt = 0
+        self.undecided = True
+        self.iterations = 0
+        # --- Pour snowball
+        self.lastColor = self.color
+        self.d = {color: 0 for color in (Colors.RED, Colors.BLUE, Colors.PURPLE)}
 
     # *************** Setters & getters
 
@@ -86,81 +94,55 @@ class Node:
         return counter
     
     
-    def snowflakeLoop(self, nodesManager: 'NodesManager', k: int, alpha: int, beta: int, iter_max: int = 50):
-        # Initialisation
-        color = random.choice(list(Colors))
-        cpt = 0
-        undecided = True
-        iterations = 0
+    def sequential_snowflake_iteration(self, nodesManager: 'NodesManager', k: int, alpha: int, beta: int):
+        self.record_color()
 
-        # Déroulement de l'algorithme
-        while (undecided or iterations <= iter_max):  # On souhiate aller jusqu'à itermax pour faire le record de la couleur !!!
+        if not self.undecided: # J'ai déjà choisi
+            return
 
-            self.record_color()
-            iterations += 1
-            if iterations > iter_max:
-                #print(f"Le noeud {self} a atteint le nombre d'itération maximal {iter_max} ")
-                return
+        if self.color == Colors.NULL:
+            return
 
-            if color == Colors.NULL:
-                continue
-            K = self.sample(nodesManager, k)
-            P = self.query_all_nodes(K)
+        K = self.sample(nodesManager, k)
+        P = self.query_all_nodes(K)
 
-            colorPrime = [Colors.RED, Colors.BLUE]
-            for currentPrimeColor in colorPrime:
-                if self.count(P, currentPrimeColor) >= alpha * k:
-                    if currentPrimeColor != color:
-                        color = currentPrimeColor
-                        cpt = 0
-                    else:
-                        cpt += 1
-                        if cpt > beta:
-                            self.set_color(color)
-                            undecided = False
+        colorPrime = [Colors.RED, Colors.BLUE]
+        for currentPrimeColor in colorPrime:
+            if self.count(P, currentPrimeColor) >= alpha * k:
+                if currentPrimeColor != self.get_color():
+                    self.set_color(currentPrimeColor)
+                    self.cpt = 0
+                else:
+                    self.cpt += 1
+                    if self.cpt > beta:
+                        self.undecided = False
 
 
-    def snowballLoop(self, nodesManager: 'NodesManager', k: int, alpha: float, beta: int, iter_max: int = 50):
-        # Initialisation
-        color = random.choice(list(Colors))
-        lastColor = random.choice(list(Colors))
-        cpt = 0
-        d = {
-            Colors.RED: 0,
-            Colors.BLUE: 0,
-            Colors.PURPLE: 0,
-        }
-        undecided = True
-        iterations = 0
+    def sequential_snowball_iteration(self, nodesManager: 'NodesManager', k: int, alpha: float, beta: int):
+        self.record_color()
 
-        # Déroulement de l'algorithme
-        while (undecided or iterations <= iter_max):
+        if not self.undecided: # J'ai déjà choisi
+            return
 
-            self.record_color()
-            iterations += 1
-            if iterations > iter_max:
-                #print(f"Le noeud {self} a atteint le nombre d'itération maximal {iter_max} ")
-                return
-        
-            if color == Colors.NULL:
-                continue
-            K = self.sample(nodesManager, k)
-            P = self.query_all_nodes(K)
+        if self.color == Colors.NULL:
+            return
+    
+        K = self.sample(nodesManager, k)
+        P = self.query_all_nodes(K)
 
-            colorPrime = [Colors.RED, Colors.BLUE]
-            for currentPrimeColor in colorPrime:
-                if self.count(P, currentPrimeColor) >= alpha * k:
-                    d[currentPrimeColor] += 1
+        colorPrime = [Colors.RED, Colors.BLUE]
+        for currentPrimeColor in colorPrime:
+            if self.count(P, currentPrimeColor) >= alpha * k:
+                self.d[currentPrimeColor] += 1
 
-                    if d[currentPrimeColor] > d[color]:
-                        color = currentPrimeColor
-                        
-                    if currentPrimeColor != lastColor:
-                        lastColor = currentPrimeColor
-                        cpt = 0
-                    else:
-                        cpt += 1
-                        if cpt > beta:
-                            self.set_color(color)
-                            undecided = False
+                if self.d[currentPrimeColor] > self.d[self.get_color()]:
+                    self.set_color(currentPrimeColor)
+                    
+                if currentPrimeColor != self.lastColor:
+                    self.lastColor = currentPrimeColor
+                    cpt = 0
+                else:
+                    cpt += 1
+                    if cpt > beta:
+                        self.undecided = False
 
