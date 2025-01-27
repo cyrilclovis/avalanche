@@ -19,7 +19,7 @@ class NodeView:
         self.size = size
 
         # La vue observe l'état de la couleur
-        node.add_observer(self)
+        node.add_color_observer(self)
 
         # Couleur initiale
         self.color = node.get_color()

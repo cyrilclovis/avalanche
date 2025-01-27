@@ -6,15 +6,17 @@ from src.enums.colors import Colors
 
 class Node:
 
-    def __init__(self):
-        self.color = random.choice(list(Colors))
-        self.observers = []
+    def __init__(self, is_bizantin=False):
+        self.is_bizantin = is_bizantin
+        self.color = random.choice([Colors.BLUE, Colors.RED, Colors.NULL]) if not self.is_bizantin else Colors.PURPLE
+        self.color_observers = []
+        self.color_history = [self.color]
 
     # *************** Setters & getters
 
     def set_color(self, color: Colors):
         self.color = color
-        self.notify_observers()
+        self.notify_color_observers()
 
     def get_color(self) -> Colors:
         return self.color
@@ -23,15 +25,22 @@ class Node:
         """Vérifie si la couleur du noeud est NULL."""
         return self.color == Colors.NULL
     
+    def record_color(self):
+        """Enregistre la couleur du noeud dans son historique."""
+        self.color_history.append(self.get_color())
+    
+    def get_random_color(self, noneAllowed: bool = True):
+        """Renvoie une couleur aléatoire"""
+        return random.choice([Colors.BLUE, Colors.RED])
 
     # *************** Observers
-    def add_observer(self, observer: 'NodeView'):
+    def add_color_observer(self, observer: 'NodeView'):
         """Ajoute une vue à la liste des observateurs."""
-        self.observers.append(observer)
+        self.color_observers.append(observer)
 
-    def notify_observers(self):
+    def notify_color_observers(self):
         """Notifie toutes les vues de la mise à jour de la couleur."""
-        for observer in self.observers:
+        for observer in self.color_observers:
             observer.update_color(self.color)
 
 
@@ -40,9 +49,9 @@ class Node:
         """On renvoie la couleur du noeud actuelle"""
         if (self.color_is_null()):
             self.set_color(otherNode.color)
-        return self.color
+        return self.color if not self.is_bizantin else Colors.PURPLE
     
-
+    
     def query_all_nodes(self, nodes) -> List[Colors]:
         """
         Utilise la fonction query sur l'ensemble des noeuds de la liste !
@@ -85,8 +94,9 @@ class Node:
         iterations = 0
 
         # Déroulement de l'algorithme
-        while (undecided):
+        while (undecided or iterations <= iter_max):  # On souhiate aller jusqu'à itermax pour faire le record de la couleur !!!
 
+            self.record_color()
             iterations += 1
             if iterations > iter_max:
                 #print(f"Le noeud {self} a atteint le nombre d'itération maximal {iter_max} ")
@@ -118,13 +128,15 @@ class Node:
         d = {
             Colors.RED: 0,
             Colors.BLUE: 0,
+            Colors.PURPLE: 0,
         }
         undecided = True
         iterations = 0
 
         # Déroulement de l'algorithme
-        while (undecided):
+        while (undecided or iterations <= iter_max):
 
+            self.record_color()
             iterations += 1
             if iterations > iter_max:
                 #print(f"Le noeud {self} a atteint le nombre d'itération maximal {iter_max} ")

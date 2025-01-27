@@ -2,10 +2,14 @@ from math import ceil, sqrt
 import tkinter as tk
 import random as rd
 import threading
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import matplotlib.pyplot as plt
+from collections import Counter
 
 from src.models.nodesManager import NodesManager
 from src.views.nodeView import NodeView
 from src.config.algoParameters import AlgoParametersManager
+from src.enums.colors import Colors
 
 class NodesManagerView(object):
     """Modélise un terrain réprésentant l'évolution des noeuds"""
@@ -51,10 +55,10 @@ class NodesManagerView(object):
     def update_model(self, params_tuple=None):
         print(params_tuple)
         if params_tuple:
-            ALGO, N, K, ALPHA, BETA, BIZANTINS, PANNES = params_tuple
+            ALGO, N, K, ALPHA, BETA, BIZANTINS_PERCENT, PANNES = params_tuple
         else:
-            ALGO, N, K, ALPHA, BETA, BIZANTINS, PANNES = AlgoParametersManager().get_all_parameters()
-        self.nodesManager = NodesManager(ALGO, N, K, ALPHA, BETA)
+            ALGO, N, K, ALPHA, BETA, BIZANTINS_PERCENT, PANNES = AlgoParametersManager().get_all_parameters()
+        self.nodesManager = NodesManager(ALGO, N, K, ALPHA, BETA, BIZANTINS_PERCENT)
 
 
     def update_view(self):
@@ -90,9 +94,36 @@ class NodesManagerView(object):
         def algorithm_thread():
             """Fonction exécutée dans un thread séparé permet de ne pas bloquer la GUI !"""
             self.nodesManager.launch_algorithm()
+            self.plot_graph()
 
         # Création et démarrage du thread
         thread = threading.Thread(target=algorithm_thread)
         thread.daemon = True  # Permet au programme de se terminer même si le thread tourne encore
         thread.start()
 
+
+    def plot_graph(self):
+        """Affiche le graphique dans l'interface Tkinter"""
+        # Collecter les historiques de couleurs des noeuds
+        iterations = max(len(node.color_history) for node in self.nodesManager.nodes)    # Comme les noeuds peuvent avoir un nombre d'itérations différents, on prend l'iter max
+        color_counts = {color: [0] * iterations for color in Colors}
+
+        for node in self.nodesManager.nodes:
+            for i, color in enumerate(node.color_history):
+                color_counts[color][i] += 1
+
+        # Créer la figure Matplotlib
+        fig, ax = plt.subplots()
+        for color, counts in color_counts.items():
+            if (sum(counts) != 0): 
+                ax.plot(range(iterations), counts, label=color.value, color=color.value)
+
+        ax.set_xlabel('Itérations')
+        ax.set_ylabel('Nombre de noeuds')
+        ax.set_title('Évolution des couleurs des nœuds au fil des itérations')
+        ax.legend()
+
+        # Intégrer la figure dans Tkinter
+        canvas = FigureCanvasTkAgg(fig, master=self.racine)  # Associer la figure à la fenêtre Tkinter
+        canvas.draw()
+        canvas.get_tk_widget().grid(column=3, row=0, rowspan=self.GRID_ROW_SPAN)  # Placer le graphique sous la grille
