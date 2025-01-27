@@ -9,7 +9,9 @@ class AlgoParametersManager:
             AlgoParameters.N.value: 600,
             AlgoParameters.K.value: 3,
             AlgoParameters.ALPHA.value: 0.5,
-            AlgoParameters.BETA.value: 10
+            AlgoParameters.BETA.value: 10,
+            AlgoParameters.BIZANTIN.value: 0,
+            AlgoParameters.PANNE.value: 0,
         }
 
     def get(self, key: str):
@@ -31,7 +33,9 @@ class AlgoParametersManager:
                 self._parameters[AlgoParameters.N.value], 
                 self._parameters[AlgoParameters.K.value], 
                 self._parameters[AlgoParameters.ALPHA.value], 
-                self._parameters[AlgoParameters.BETA.value])
+                self._parameters[AlgoParameters.BETA.value],
+                self._parameters[AlgoParameters.BIZANTIN.value], 
+                self._parameters[AlgoParameters.PANNE.value])
     
     def set_all_parameters(self, parameters: dict):
         for (key, val) in parameters:
@@ -39,7 +43,7 @@ class AlgoParametersManager:
 
                 if key in [AlgoParameters.N.value, AlgoParameters.K.value]:
                     self.set(key, int(val))
-                elif key in [AlgoParameters.ALPHA.value, AlgoParameters.BETA.value]:
+                elif key in [AlgoParameters.ALPHA.value, AlgoParameters.BETA.value, AlgoParameters.BIZANTIN.value, AlgoParameters.PANNE.value]:
                     self.set(key, float(val))
                 else:
                     self.set(key, val)

@@ -11,6 +11,7 @@ class NodesManagerView(object):
     """Modélise un terrain réprésentant l'évolution des noeuds"""
 
     SIDE_SIZE = 15
+    GRID_ROW_SPAN = 7
 
     def __init__(self, racine):
         """Génère le terrain"""
@@ -23,7 +24,7 @@ class NodesManagerView(object):
         """Crée le terrain de base puis y applique les règles"""
         self.canvas = tk.Canvas(self.racine, width=self.WIDTH, height=self.HEIGHT)
         self.init_field()
-        self.canvas.grid(column=2, row=0, rowspan=4)
+        self.canvas.grid(column=2, row=0, rowspan=self.GRID_ROW_SPAN)
         # Ajout du bouton
         self.lauch_algo_btn()
 
@@ -50,9 +51,9 @@ class NodesManagerView(object):
     def update_model(self, params_tuple=None):
         print(params_tuple)
         if params_tuple:
-            ALGO, N, K, ALPHA, BETA = params_tuple
+            ALGO, N, K, ALPHA, BETA, BIZANTINS, PANNES = params_tuple
         else:
-            ALGO, N, K, ALPHA, BETA = AlgoParametersManager().get_all_parameters()
+            ALGO, N, K, ALPHA, BETA, BIZANTINS, PANNES = AlgoParametersManager().get_all_parameters()
         self.nodesManager = NodesManager(ALGO, N, K, ALPHA, BETA)
 
 
@@ -80,7 +81,7 @@ class NodesManagerView(object):
             command=self.lauch_algorithm
         )
         # Placer le bouton en dessous de la grille
-        bouton_lancer.grid(column=2, row=4, pady=10)
+        bouton_lancer.grid(column=2, row=self.GRID_ROW_SPAN, pady=10)
 
 
     def lauch_algorithm(self):

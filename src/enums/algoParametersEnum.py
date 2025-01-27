@@ -8,3 +8,5 @@ class AlgoParameters(Enum):
     K = "k (nombre de voisins à contacter)"
     ALPHA = "alpha"
     BETA = "beta"
+    BIZANTIN = "Bizantins (en %)"
+    PANNE = "Panne (en %)"
