@@ -5,7 +5,7 @@ class AlgoParametersManager:
     """Gestionnaire pour les paramètres de l'algorithme."""
     def __init__(self):
         self._parameters = {
-            AlgoParameters.ALGO.value: AlgoChoices.SNOWFLAKE.value,
+            AlgoParameters.ALGO.value: AlgoChoices.SLUSH.value,
             AlgoParameters.M.value: 100,
             AlgoParameters.N.value: 600,
             AlgoParameters.K.value: 3,

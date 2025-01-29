@@ -5,7 +5,7 @@ import random
 class ByzantineNode(Node):
 
     def __init__(self):
-        super().__init__(random.choice([Colors.BLUE, Colors.RED]))
+        super().__init__(random.choice([Colors.BLUE, Colors.RED, Colors.NULL]))
 
     # *************** Gestion des requetes
     def on_query(self, otherNode) -> Colors:

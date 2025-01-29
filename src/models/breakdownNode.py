@@ -1,4 +1,3 @@
-import random
 from typing import List
 
 from src.enums.colors import Colors
@@ -21,6 +20,10 @@ class BreakdownNode(Node):
         pass
     
     # *************** Mise en place des algorithmes snowflakeLoop & snowballLoop
+    def sequential_slush_iteration(self, nodesManager: 'NodesManager', k: int, alpha: int, beta: int):
+        """Le noeud ne réagit pas, pour autant il ajoute sa couleur à la liste à chaque itération !"""
+        self.record_color()
+        pass
 
     def sequential_snowflake_iteration(self, nodesManager: 'NodesManager', k: int, alpha: int, beta: int):
         """Le noeud ne réagit pas, pour autant il ajoute sa couleur à la liste à chaque itération !"""

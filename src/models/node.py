@@ -45,7 +45,9 @@ class Node:
     
     def set_current_algorithm(self, algo: str):
         """Défini dynamiquement l'algorithme à utiliser"""
-        if algo == AlgoChoices.SNOWFLAKE.value:
+        if algo == AlgoChoices.SLUSH.value:
+            self.current_method = self.sequential_slush_iteration
+        elif algo == AlgoChoices.SNOWFLAKE.value:
             self.current_method = self.sequential_snowflake_iteration
         elif algo == AlgoChoices.SNOWBALL.value:
             self.current_method = self.sequential_snowball_iteration
@@ -111,7 +113,26 @@ class Node:
                 counter += 1
         return counter
     
+    def sequential_slush_iteration(self, nodesManager: 'NodesManager', k: int, alpha: int, beta: int):
+        self.record_color()
+
+        if not self.undecided: # J'ai déjà choisi
+            return
+
+        if self.color == Colors.NULL:
+            return
+
+        K = self.sample(nodesManager, k)
+        P = self.query_all_nodes(K)
+
+        colorPrime = [Colors.RED, Colors.BLUE]
+        for currentPrimeColor in colorPrime:
+            if self.count(P, currentPrimeColor) >= alpha * k:
+                if currentPrimeColor != self.get_color():
+                    self.set_color(currentPrimeColor)
+                    self.undecided = False
     
+
     def sequential_snowflake_iteration(self, nodesManager: 'NodesManager', k: int, alpha: int, beta: int):
         self.record_color()
 
