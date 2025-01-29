@@ -2,43 +2,47 @@ import random
 
 from src.models import Node
 from src.models.bizantinNode import ByzantineNode
+from src.models.breakdownNode import BreakdownNode
+
 from src.enums.algoChoices import AlgoChoices
 
 class NodesManager:
-    def __init__(self, algo:str, nombreNoeuds: int, k: int, alpha: float, beta: int, bizantinPercent: float):
+    def __init__(self, algo:str, nombreNoeuds: int, k: int, alpha: float, beta: int, bizantinPercent: float, breakdownPercent: float):
         """
         Initialise un tableau de noeuds avec une couleur aléatoire.
         :param NombreNoeuds: Nombre total de noeuds à créer.
         """
         if nombreNoeuds <= 0:
             raise ValueError("Le nombre de noeuds doit être supérieur à 0.")
-        self.nodes = self.create_nodes(nombreNoeuds, bizantinPercent)
+        self.nodes = self.create_nodes(nombreNoeuds, bizantinPercent, breakdownPercent)
         self.K = k
         self.ALPHA = alpha
         self.BETA = beta
         self.set_algo_to_use(algo)
 
 
-    def create_nodes(self, NombreNoeuds: int, bizantinPercent: float):
+    def create_nodes(self, NombreNoeuds: int, bizantinPercent: float, breakdownPercent: float):
         """
-        Crée les nœuds avec un pourcentage de nœuds byzantins.
+        Crée les nœuds avec un pourcentage de nœuds byzantins et de pannes.
+        
         :param NombreNoeuds: Nombre total de nœuds.
         :param bizantinPercent: Pourcentage de nœuds byzantins.
+        :param breakdownPercent: Pourcentage de nœuds en panne.
         :return: Liste de nœuds.
         """
         nodes = []
         num_bizantin_nodes = int(NombreNoeuds * bizantinPercent / 100)
-        print(f"Il y a {num_bizantin_nodes} bizantins")
+        num_breakdown_nodes = int(NombreNoeuds * breakdownPercent / 100)
 
-        # Crée les nœuds avec le bon pourcentage de nœuds byzantins
         for i in range(NombreNoeuds):
-            is_bizantin = i < num_bizantin_nodes  # Les premiers `num_bizantin_nodes` seront byzantins
-            if (is_bizantin):
-                nodes.append(ByzantineNode())
+            if i < num_bizantin_nodes:
+                nodes.append(ByzantineNode())  # Création d'un nœud byzantin
+            elif i < num_bizantin_nodes + num_breakdown_nodes:
+                nodes.append(BreakdownNode())  # Création d'un nœud en panne
             else:
-                nodes.append(Node())
+                nodes.append(Node())  # Création d'un nœud normal
         
-        random.shuffle(nodes)  # Mélange les nœuds pour une distribution aléatoire
+        random.shuffle(nodes)  # Mélange des nœuds pour une distribution aléatoire
         return nodes
 
 

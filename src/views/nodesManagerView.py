@@ -55,10 +55,10 @@ class NodesManagerView(object):
     def update_model(self, params_tuple=None):
         print(params_tuple)
         if params_tuple:
-            ALGO, N, K, ALPHA, BETA, BIZANTINS_PERCENT, PANNES = params_tuple
+            ALGO, N, K, ALPHA, BETA, BIZANTINS_PERCENT, BREAKDOWN_PERCENT = params_tuple
         else:
-            ALGO, N, K, ALPHA, BETA, BIZANTINS_PERCENT, PANNES = AlgoParametersManager().get_all_parameters()
-        self.nodesManager = NodesManager(ALGO, N, K, ALPHA, BETA, BIZANTINS_PERCENT)
+            ALGO, N, K, ALPHA, BETA, BIZANTINS_PERCENT, BREAKDOWN_PERCENT = AlgoParametersManager().get_all_parameters()
+        self.nodesManager = NodesManager(ALGO, N, K, ALPHA, BETA, BIZANTINS_PERCENT, BREAKDOWN_PERCENT)
 
 
     def update_view(self):

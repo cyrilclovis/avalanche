@@ -3,7 +3,6 @@ from src.models.node import Node
 import random
 
 class ByzantineNode(Node):
-    # Par défaut, le byzantin renvoie toujours la couleur violette !
 
     def __init__(self):
         super().__init__(random.choice([Colors.BLUE, Colors.RED]))
