@@ -6,9 +6,8 @@ from src.enums.colors import Colors
 
 class Node:
 
-    def __init__(self, is_bizantin=False):
-        self.is_bizantin = is_bizantin
-        self.color = random.choice([Colors.BLUE, Colors.RED, Colors.NULL]) if not self.is_bizantin else Colors.PURPLE
+    def __init__(self, color=None):
+        self.color = color if color else random.choice([Colors.BLUE, Colors.RED, Colors.NULL])
         self.color_observers = []
         self.color_history = [self.color]
         ##### Attributs pour le déroulement des algorithmes
@@ -18,7 +17,7 @@ class Node:
         self.iterations = 0
         # --- Pour snowball
         self.lastColor = self.color
-        self.d = {color: 0 for color in (Colors.RED, Colors.BLUE, Colors.PURPLE)}
+        self.d = {color: 0 for color in (Colors.RED, Colors.BLUE)}
 
     # *************** Setters & getters
 
@@ -57,7 +56,7 @@ class Node:
         """On renvoie la couleur du noeud actuelle"""
         if (self.color_is_null()):
             self.set_color(otherNode.color)
-        return self.color if not self.is_bizantin else Colors.PURPLE
+        return self.color
     
     
     def query_all_nodes(self, nodes) -> List[Colors]:
@@ -106,7 +105,7 @@ class Node:
         K = self.sample(nodesManager, k)
         P = self.query_all_nodes(K)
 
-        colorPrime = [Colors.RED, Colors.BLUE]
+        colorPrime = [Colors.RED, Colors.BLUE] # Dans mon code, le bizantin doit toujours renvoyer violet, dois-je l'ajouter ici ?
         for currentPrimeColor in colorPrime:
             if self.count(P, currentPrimeColor) >= alpha * k:
                 if currentPrimeColor != self.get_color():

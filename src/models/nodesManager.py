@@ -1,6 +1,7 @@
 import random
 
 from src.models import Node
+from src.models.bizantinNode import ByzantineNode
 from src.enums.algoChoices import AlgoChoices
 
 class NodesManager:
@@ -32,7 +33,10 @@ class NodesManager:
         # Crée les nœuds avec le bon pourcentage de nœuds byzantins
         for i in range(NombreNoeuds):
             is_bizantin = i < num_bizantin_nodes  # Les premiers `num_bizantin_nodes` seront byzantins
-            nodes.append(Node(is_bizantin=is_bizantin))
+            if (is_bizantin):
+                nodes.append(ByzantineNode())
+            else:
+                nodes.append(Node())
         
         random.shuffle(nodes)  # Mélange les nœuds pour une distribution aléatoire
         return nodes
