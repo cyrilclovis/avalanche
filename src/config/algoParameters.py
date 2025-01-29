@@ -5,7 +5,8 @@ class AlgoParametersManager:
     """Gestionnaire pour les paramètres de l'algorithme."""
     def __init__(self):
         self._parameters = {
-            AlgoParameters.ALGO.value: AlgoChoices.SNOWFLAKE_LOOP.value,
+            AlgoParameters.ALGO.value: AlgoChoices.SNOWFLAKE.value,
+            AlgoParameters.M.value: 100,
             AlgoParameters.N.value: 600,
             AlgoParameters.K.value: 3,
             AlgoParameters.ALPHA.value: 0.5,
@@ -29,7 +30,8 @@ class AlgoParametersManager:
 
     def get_all_parameters(self):
         """Retourne les valeurs de N, K, ALPHA, BETA dans l'ordre spécifié."""
-        return (self._parameters[AlgoParameters.ALGO.value], 
+        return (self._parameters[AlgoParameters.ALGO.value],
+                self._parameters[AlgoParameters.M.value], 
                 self._parameters[AlgoParameters.N.value], 
                 self._parameters[AlgoParameters.K.value], 
                 self._parameters[AlgoParameters.ALPHA.value], 
@@ -41,7 +43,7 @@ class AlgoParametersManager:
         for (key, val) in parameters:
                 val = str(val).strip()
 
-                if key in [AlgoParameters.N.value, AlgoParameters.K.value]:
+                if key in [AlgoParameters.M.value, AlgoParameters.N.value, AlgoParameters.K.value]:
                     self.set(key, int(val))
                 elif key in [AlgoParameters.ALPHA.value, AlgoParameters.BETA.value, AlgoParameters.BIZANTIN.value, AlgoParameters.PANNE.value]:
                     self.set(key, float(val))
@@ -69,41 +71,32 @@ class AlgoParametersManager:
             # Validation en fonction de la clé (paramètre)
             if key == AlgoParameters.ALGO.value:
                 if val_str not in [choice.value for choice in AlgoChoices]:
-                    errors.append(f"Paramètre '{AlgoParameters.ALGO.value}' : valeur invalide ({val_str}).")
+                    errors.append(f"Paramètre '{AlgoParameters.ALGO.value}', valeur invalide")
 
-            elif key == AlgoParameters.N.value:
+            elif key in [AlgoParameters.M.value, AlgoParameters.N.value, AlgoParameters.K.value]:
                 try:
                     n = int(val_str)
                     if n <= 0:
-                        errors.append(f"Paramètre '{AlgoParameters.N.value}' : doit être un entier positif (actuel : {val_str}).")
+                        errors.append(f"Paramètre '{key}', doit être un entier positif")
                 except ValueError:
-                    errors.append(f"Paramètre '{AlgoParameters.N.value}' : doit être un entier positif (actuel : {val_str}).")
-            
-            elif key == AlgoParameters.K.value:
-                try:
-                    k = int(val_str)
-                    if k <= 0:
-                        errors.append(f"Paramètre '{AlgoParameters.K.value}' : doit être un entier positif (actuel : {val_str}).")
-                except ValueError:
-                    errors.append(f"Paramètre '{AlgoParameters.K.value}' : doit être un entier positif (actuel : {val_str}).")
+                    errors.append(f"Paramètre '{key}', doit être un entier positif")
             
             elif key == AlgoParameters.ALPHA.value:
                 try:
                     alpha = float(val_str)
                     if not (0 <= alpha <= 1):
-                        errors.append(f"Paramètre '{AlgoParameters.ALPHA.value}' : doit être un float entre 0 et 1 (actuel : {val_str}).")
+                        errors.append(f"Paramètre '{AlgoParameters.ALPHA.value}' : doit être un float entre 0 et 1")
                 except ValueError:
-                    errors.append(f"Paramètre '{AlgoParameters.ALPHA.value}' : doit être un float entre 0 et 1 (actuel : {val_str}).")
+                    errors.append(f"Paramètre '{AlgoParameters.ALPHA.value}' : doit être un float entre 0 et 1")
             
-            elif key == AlgoParameters.BETA.value:
+            elif key in [AlgoParameters.BETA.value, AlgoParameters.BIZANTIN.value, AlgoParameters.PANNE.value]:
                 try:
                     beta = float(val_str)
                     if beta < 0:
-                        errors.append(f"Paramètre '{AlgoParameters.BETA.value}' : doit être un float ou un entier positif (actuel : {val_str}).")
+                        errors.append(f"Paramètre '{key}', doit être un float ou un entier positif")
                 except ValueError:
-                    errors.append(f"Paramètre '{AlgoParameters.BETA.value}' : doit être un float ou un entier positif (actuel : {val_str}).")
+                    errors.append(f"Paramètre '{key}', doit être un float ou un entier positif")
 
-            # Vous pouvez ajouter plus de validations pour d'autres paramètres si nécessaire
 
         if len(errors) == 0:
             self.set_all_parameters(parameters)

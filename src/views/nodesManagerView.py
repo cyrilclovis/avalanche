@@ -1,10 +1,10 @@
 from math import ceil, sqrt
 import tkinter as tk
+from tkinter import ttk
 import random as rd
 import threading
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
-from collections import Counter
 
 from src.models.nodesManager import NodesManager
 from src.views.nodeView import NodeView
@@ -20,7 +20,7 @@ class NodesManagerView(object):
     def __init__(self, racine):
         """Génère le terrain"""
         self.racine = racine
-        self.racine.title("Terrain de jeu")
+        self.racine.title("Versions séquentielles des algorithmes slush, snowflake et snowball")
         self.update()
         
 
@@ -55,10 +55,10 @@ class NodesManagerView(object):
     def update_model(self, params_tuple=None):
         print(params_tuple)
         if params_tuple:
-            ALGO, N, K, ALPHA, BETA, BIZANTINS_PERCENT, BREAKDOWN_PERCENT = params_tuple
+            ALGO, M, N, K, ALPHA, BETA, BIZANTINS_PERCENT, BREAKDOWN_PERCENT = params_tuple
         else:
-            ALGO, N, K, ALPHA, BETA, BIZANTINS_PERCENT, BREAKDOWN_PERCENT = AlgoParametersManager().get_all_parameters()
-        self.nodesManager = NodesManager(ALGO, N, K, ALPHA, BETA, BIZANTINS_PERCENT, BREAKDOWN_PERCENT)
+            ALGO, M, N, K, ALPHA, BETA, BIZANTINS_PERCENT, BREAKDOWN_PERCENT = AlgoParametersManager().get_all_parameters()
+        self.nodesManager = NodesManager(ALGO, M, N, K, ALPHA, BETA, BIZANTINS_PERCENT, BREAKDOWN_PERCENT)
 
 
     def update_view(self):
@@ -79,7 +79,7 @@ class NodesManagerView(object):
 
     def lauch_algo_btn(self):
         """Ajoute un bouton pour lancer l'algorithme"""
-        bouton_lancer = tk.Button(
+        bouton_lancer = ttk.Button(
             self.racine,
             text="Lancer l'algorithme",
             command=self.lauch_algorithm

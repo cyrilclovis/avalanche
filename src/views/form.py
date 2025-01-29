@@ -1,11 +1,14 @@
 import tkinter as tk
+from tkinter import ttk, messagebox
 
 from src.config.algoParameters import AlgoParametersManager
 from src.views.nodesManagerView import NodesManagerView
+from src.enums.algoParametersEnum import AlgoParameters
+from src.enums.algoChoices import AlgoChoices
 
 BACKGROUND = "Grey95"
 FOREGROUND = "Black"
-FONT = ('Bahnschrift Light SemiCondensed', 15)
+FONT = ('Bahnschrift Light SemiCondensed', 12)
 
 class Form(object):
     """Gère l'interface utilisateur pour demander les paramètres nécessaires à l'algorithme et au terrain."""
@@ -20,42 +23,41 @@ class Form(object):
         self.creation_interface()
         self.nodes_manager_view = NodesManagerView(racine)
 
+
     def creation_interface(self):
         """Crée l'interface utilisateur pour demander les paramètres."""
         self.ligne = 0
         self.colonne = 0
+        self.frame = ttk.LabelFrame(self.racine, text="Paramètres de l'algorithme", padding=10)
+        self.frame.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+
+        # Configuration de la grille principale
+        self.racine.grid_rowconfigure(0, weight=1)
+        self.racine.grid_columnconfigure(0, weight=1)
+
         self.interface(self.algo_manager.map_field_parameters())
 
-        # Bouton pour valider
-        valider = tk.Button(
-            self.racine,
-            text="Valider",
-            font=FONT,
-            command=self.valider_parametres
-        )
-        valider.grid(column=0, row=self.ligne, columnspan=2)
+        # Bouton pour valider, positionné après le cadre
+        valider = ttk.Button(self.racine, text="Valider", command=self.valider_parametres)
+        valider.grid(row=self.ligne, column=0, columnspan=2, pady=10)
+
 
     def interface(self, information):
         """Ajoute les champs de saisie pour chaque paramètre."""
         for cle, valeur_defaut in information.items():
-            label = tk.Label(
-                self.racine,
-                text=cle,
-                bg=BACKGROUND,
-                fg=FOREGROUND,
-                font=FONT
-            )
-            label.grid(column=0, row=self.ligne, sticky="w", padx=10, pady=5)
+            ttk.Label(self.frame, text=cle, font=FONT).grid(row=self.ligne, column=0, padx=5, pady=5, sticky="w")
+            
+            if cle == AlgoParameters.ALGO.value:
+                combobox = ttk.Combobox(self.frame, values=[choice.value for choice in AlgoChoices], font=FONT)
+                combobox.set(valeur_defaut)  # Valeur par défaut
+                combobox.grid(row=self.ligne, column=1, padx=5, pady=5)
+                self.bouttons[cle] = combobox
+            else:
+                entree = ttk.Entry(self.frame, font=FONT)
+                entree.insert(0, valeur_defaut)  # Valeur par défaut
+                entree.grid(row=self.ligne, column=1, padx=5, pady=5)
 
-            entree = tk.Entry(
-                self.racine,
-                font=FONT,
-                justify="center"
-            )
-            entree.insert(0, valeur_defaut)  # Valeur par défaut
-            entree.grid(column=1, row=self.ligne, padx=10, pady=5)
-
-            self.bouttons[cle] = entree
+                self.bouttons[cle] = entree
             self.ligne += 1
 
 
@@ -63,8 +65,8 @@ class Form(object):
         """Récupère les valeurs saisies et les met à jour dans le gestionnaire."""
         userForm = [(key, val.get()) for key, val in self.bouttons.items()]
         isValidForm, errors = self.algo_manager.set_parameters_if_correct_form(userForm)
-        if (isValidForm):
+        if isValidForm:
             self.nodes_manager_view.update(self.algo_manager.get_all_parameters())
         else:
-            print(errors)
-
+            error_message = "\n".join(errors)
+            messagebox.showerror("Erreur de validation", f"Les erreurs suivantes sont survenues :\n\n{error_message}")

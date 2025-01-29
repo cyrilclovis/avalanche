@@ -3,6 +3,7 @@ import random
 from typing import List
 
 from src.enums.colors import Colors
+from src.enums.algoChoices import AlgoChoices
 
 class Node:
 
@@ -18,6 +19,8 @@ class Node:
         # --- Pour snowball
         self.lastColor = self.color
         self.d = {color: 0 for color in (Colors.RED, Colors.BLUE)}
+
+        self.current_algorithm = None
 
     # *************** Setters & getters
 
@@ -39,6 +42,22 @@ class Node:
     def get_random_color(self, noneAllowed: bool = True):
         """Renvoie une couleur aléatoire"""
         return random.choice([Colors.BLUE, Colors.RED])
+    
+    def set_current_algorithm(self, algo: str):
+        """Défini dynamiquement l'algorithme à utiliser"""
+        if algo == AlgoChoices.SNOWFLAKE.value:
+            self.current_method = self.sequential_snowflake_iteration
+        elif algo == AlgoChoices.SNOWBALL.value:
+            self.current_method = self.sequential_snowball_iteration
+        else:
+            raise ValueError(f"Algorithme non reconnue: {algo}")
+        
+    def execute_one_iteration(self, nodesManager, k, alpha, beta):
+        """Lance une itération de l'algorithme"""
+        if self.current_method:
+            self.current_method(nodesManager, k, alpha, beta)
+        else:
+            print("No method has been set.")
 
     # *************** Observers
     def add_color_observer(self, observer: 'NodeView'):
@@ -139,9 +158,9 @@ class Node:
                     
                 if currentPrimeColor != self.lastColor:
                     self.lastColor = currentPrimeColor
-                    cpt = 0
+                    self.cpt = 0
                 else:
-                    cpt += 1
-                    if cpt > beta:
+                    self.cpt += 1
+                    if self.cpt > beta:
                         self.undecided = False
 
