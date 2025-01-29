@@ -1,6 +1,7 @@
 import random
 
 from src.models import Node
+from src.models.bizantinNode import ByzantineNode
 from src.enums.algoChoices import AlgoChoices
 
 class NodesManager:
@@ -32,7 +33,10 @@ class NodesManager:
         # Crée les nœuds avec le bon pourcentage de nœuds byzantins
         for i in range(NombreNoeuds):
             is_bizantin = i < num_bizantin_nodes  # Les premiers `num_bizantin_nodes` seront byzantins
-            nodes.append(Node(is_bizantin=is_bizantin))
+            if (is_bizantin):
+                nodes.append(ByzantineNode())
+            else:
+                nodes.append(Node())
         
         random.shuffle(nodes)  # Mélange les nœuds pour une distribution aléatoire
         return nodes
@@ -53,9 +57,6 @@ class NodesManager:
         """
         Lance l'algorithme configuré sur tous les nœuds.
         """
-        for node in self.nodes:
-            if not hasattr(node, self.algo_name):
-                raise AttributeError(f"L'algorithme '{self.algo_name}' n'est pas défini dans la classe Node.")
-            
-            # Appelle dynamiquement la méthode correspondant à l'algorithme
-            getattr(node, self.algo_name)(nodesManager=self, k=self.K, alpha=self.ALPHA, beta=self.BETA)
+        for _ in range (50):
+            for node in self.nodes:
+                node.sequential_snowflake_iteration(nodesManager=self, k=self.K, alpha=self.ALPHA, beta=self.BETA)
