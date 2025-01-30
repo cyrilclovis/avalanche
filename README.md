@@ -6,18 +6,24 @@ Simulation séquentielle des algorithmes slush, snowflake et snowball de la bloc
 
 1. Cloner le projet
 2. Créer un environnement virtuel
-```bash
-python -m venv .venv
-```
+    ```bash
+    python -m venv .venv
+    ```
 3. Activer l'environnement virtuel
-- Sur Windows (cmd.exe) :
-```bash
-.venv\Scripts\activate
-```
-3. Installer les dépendances
-```bash
-pip install -r requirements.txt
-```
+    - Sur Windows:
+        ```bash
+        .venv\Scripts\activate
+        ```
+
+    - Sur Linux/Max :
+        ```bash
+        source .venv/bin/activate
+        ```
+
+4. Installer les dépendances
+    ```bash
+    pip install -r requirements.txt
+    ```
 
 NB : Ne pas oublier d'activer l'envrionnement virtuel à chaque fois que vous travaillez sur le projet.
 
