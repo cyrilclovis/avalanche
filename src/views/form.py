@@ -56,9 +56,25 @@ class Form(object):
                 entree = ttk.Entry(self.frame, font=FONT)
                 entree.insert(0, valeur_defaut)  # Valeur par défaut
                 entree.grid(row=self.ligne, column=1, padx=5, pady=5)
-
                 self.bouttons[cle] = entree
             self.ligne += 1
+
+        info_icon = ttk.Label(self.frame, text="ℹ", font=(FONT[0], 12, "bold"), foreground="blue", cursor="hand2")
+        info_icon.grid(row=self.ligne, column=2, padx=5, pady=5, sticky="w")
+        
+        tooltip_text = (
+            "Si vous renseignez P % pannes, alors à la fin des M itérations, (P/100) * NbNoeuds "
+            "seront en panne. Les pannes sont réparties aléatoirement.\n\n"
+            "Conseil : Pour bien observer l'effet des pannes sur l'algorithme :\n"
+            "1. Exécutez sans panne et notez la convergence.\n"
+            "2. Ensuite, choisissez M proche de ce nombre d'itérations.\n"
+            "3. Ajouter des pannes, puis relancer"
+        )
+
+        def show_tooltip(event):
+            messagebox.showinfo("Info - Pannes", tooltip_text)
+        
+        info_icon.bind("<Button-1>", show_tooltip)
 
 
     def valider_parametres(self):

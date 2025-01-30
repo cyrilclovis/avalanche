@@ -6,11 +6,12 @@ from src.enums.colors import Colors
 from src.enums.algoChoices import AlgoChoices
 
 class Node:
-
+    
     def __init__(self, color=None):
         self.color = color if color else random.choice([Colors.BLUE, Colors.RED, Colors.NULL])
         self.color_observers = []
         self.color_history = [self.color]
+        self.is_breakdown = False
         ##### Attributs pour le déroulement des algorithmes
         # --- Pour snowflake
         self.cpt = 0
@@ -61,6 +62,11 @@ class Node:
         else:
             print("No method has been set.")
 
+    def break_node_down(self):
+        """Le noeud est désormais en panne"""
+        self.is_breakdown = True
+        self.set_color(Colors.BLACK)
+
     # *************** Observers
     def add_color_observer(self, observer: 'NodeView'):
         """Ajoute une vue à la liste des observateurs."""
@@ -75,6 +81,9 @@ class Node:
     # *************** Gestion des requetes
     def on_query(self, otherNode) -> Colors:
         """On renvoie la couleur du noeud actuelle"""
+        if self.is_breakdown:
+            return
+        
         if (self.color_is_null()):
             self.set_color(otherNode.color)
         return self.color
@@ -84,6 +93,9 @@ class Node:
         """
         Utilise la fonction query sur l'ensemble des noeuds de la liste !
         """
+        if self.is_breakdown:
+            return
+        
         colors = [node.on_query(self) for node in nodes]
         #print(f"Couleurs obtenues après interrogation : {colors}")
         return colors
@@ -116,7 +128,7 @@ class Node:
     def sequential_slush_iteration(self, nodesManager: 'NodesManager', k: int, alpha: int, beta: int):
         self.record_color()
 
-        if not self.undecided: # J'ai déjà choisi
+        if not self.undecided or self.is_breakdown: # J'ai déjà choisi ou je suis en panne
             return
 
         if self.color == Colors.NULL:
@@ -136,7 +148,7 @@ class Node:
     def sequential_snowflake_iteration(self, nodesManager: 'NodesManager', k: int, alpha: int, beta: int):
         self.record_color()
 
-        if not self.undecided: # J'ai déjà choisi
+        if not self.undecided or self.is_breakdown: # J'ai déjà choisi ou je suis en panne
             return
 
         if self.color == Colors.NULL:
@@ -145,7 +157,7 @@ class Node:
         K = self.sample(nodesManager, k)
         P = self.query_all_nodes(K)
 
-        colorPrime = [Colors.RED, Colors.BLUE] # Dans mon code, le bizantin doit toujours renvoyer violet, dois-je l'ajouter ici ?
+        colorPrime = [Colors.RED, Colors.BLUE]
         for currentPrimeColor in colorPrime:
             if self.count(P, currentPrimeColor) >= alpha * k:
                 if currentPrimeColor != self.get_color():
@@ -160,7 +172,7 @@ class Node:
     def sequential_snowball_iteration(self, nodesManager: 'NodesManager', k: int, alpha: float, beta: int):
         self.record_color()
 
-        if not self.undecided: # J'ai déjà choisi
+        if not self.undecided or self.is_breakdown: # J'ai déjà choisi ou je suis en panne
             return
 
         if self.color == Colors.NULL:

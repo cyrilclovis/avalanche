@@ -1,7 +1,6 @@
 from math import ceil, sqrt
 import tkinter as tk
 from tkinter import ttk
-import random as rd
 import threading
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 import matplotlib.pyplot as plt
